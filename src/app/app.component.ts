@@ -22,20 +22,43 @@ export class AppComponent {
             sexo: 'M',
             id: uuid.v4()
         },
-    ]
+    ];
+    ngOnInit() {
+      // Recuperar los registros guardados en localStorage
+      const savedUsers: string | null = localStorage.getItem('users');
+      if (savedUsers) {
+          this.users = JSON.parse(savedUsers);
+      }
+  }
+
     onListSelectionChange(ob: MatSelectionListChange) {
         this.users_selected = ob.source.selectedOptions.selected.map(item => (item.value));
     }
     AgregarUsuario() {
-        let newDato = {
-            name: this.nombre,
-            edad: this.edad,
-            sexo: this.sexo,
-            id: uuid.v4(),
-        };
-        this.users.push(newDato);
-        console.log(newDato);
-    }
+      if (!this.nombre || !this.edad) {
+          alert('Por favor, ingrese el nombre y la edad');
+          return;
+      }
+
+      let newDato = {
+          name: this.nombre,
+          edad: this.edad,
+          sexo: this.sexo,
+          id: uuid.v4(),
+      };
+      this.users.push(newDato);
+      console.log(newDato);
+
+          // Guardar los registros en localStorage
+    localStorage.setItem('users', JSON.stringify(this.users));
+
+    console.log(newDato);
+
+      // Limpiar valores de entrada
+      this.nombre = '';
+      this.edad = 0;
+  }
+
     selectedOptions = [];
     selectedOption = '';
 
@@ -58,3 +81,5 @@ function eliminarDatos(arreglo1: any[], arreglo2: any[]): any[] {
     // Retorno del resultado
     return resultado;
   }
+
+
